@@ -1,0 +1,53 @@
+---
+title: "introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(biologicSC)
+library(Seurat)
+
+testObj <- pbmc_small
+all.genes <- rownames(testObj)
+testObj <- ScaleData(testObj, features = all.genes)
+testObj <- RunPCA(testObj, npcs = 3)
+testObj <- RunUMAP(testObj, dims = 1:3)
+
+testObj <- FindNeighbors(testObj, dims = 1:3)
+testObj <- FindClusters(testObj, resolution = 0.5)
+
+dfPCA <- testObj@reductions$pca
+dfUMAP <- testObj@reductions$pca
+dftSNE <- testObj@reductions$pca
+
+testObj@meta.data[["all"]] <- "all"
+
+
+
+params <- scanObjParams(testObj)
+
+seurat2viewer(
+    obj = testObj,
+    assay = "RNA",
+    #slot = "data",
+    geneSel = NULL,
+    params = params,
+    projectName = "test8"
+) 
+
+setwd("..")
+library(shiny)
+runApp("test8_app")
+
+```
