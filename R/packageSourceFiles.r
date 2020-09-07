@@ -224,6 +224,9 @@ setGeneric(
 )
 
 
+dfCoord <- createDfCoord(obj)[1:3,]
+dfExpr <- createDfExpr(obj)[1:3,]
+dfColCheck <- merge(dfCoord, dfExpr, by.x = "cellID", by.y = "cellID", all =TRUE)
 
 ###############################################################################
 
@@ -247,7 +250,11 @@ setGeneric(
     projectName = "test"
   ) {
     dfCoord <- createDfCoord(obj = testObj, params = params)
+    names(dfCoord) <- gsub("[.]", "_", names(dfCoord))
+    params <- lapply(params,  function(x) gsub("[.]", "_", x))
+
     dfExpr <- createDfExpr(obj = testObj, assay = "RNA")
+
 
     dfIDTable <- dfExpr
     dfIDTable[["gene_id"]] <- 0
@@ -333,10 +340,10 @@ setGeneric(
 
     setwd("../parameters")
     yamlList <- list(
-      "XYsel" = params[["x_axis"]],
-      "allColorOptions" = params[["colorPlotsBy"]],
-      "splitOptions" = params[["splitPlotsBy"]],
-      "sampleColorList" = params[["sampleColorList"]]
+      "XYsel" = names(params[["x_axis"]]),
+      "allColorOptions" = names(params[["colorPlotsBy"]]),
+      "splitOptions" = names(params[["splitPlotsBy"]]),
+      "sampleColorList" = names(params[["sampleColorList"]])
     )
 
     FN <- paste0("parameters.yaml")
