@@ -245,9 +245,16 @@ setGeneric(
     params = NULL,
     projectName = "test"
   ) {
-    dfCoord <- createDfCoord(obj = testObj, params = params)
+
+    if (is.null(params)){
+      params <- scanObjParams(obj)
+    }
+    dfCoord <- createDfCoord(obj, params = params)
     names(dfCoord) <- gsub("[.]", "_", names(dfCoord))
-    params <- lapply(params,  function(x) gsub("[.]", "_", x))
+    params$x_axis <- gsub("[.]", "_", params$x_axis)
+    params$y_axis <- gsub("[.]", "_", params$y_axis)
+    params$splitPlotsBy <- gsub("[.]", "_", params$splitPlotsBy)
+    params$colorPlotsBy <- gsub("[.]", "_", params$colorPlotsBy)
 
     dfExpr <- createDfExpr(obj = testObj, assay = "RNA")
 
@@ -336,18 +343,22 @@ setGeneric(
 
     setwd("../parameters")
     yamlList <- list(
-      "XYsel" = names(params[["x_axis"]]),
-      "allColorOptions" = names(params[["colorPlotsBy"]]),
-      "splitOptions" = names(params[["splitPlotsBy"]]),
-      "sampleColorList" = names(params[["sampleColorList"]])
+      "XYsel" = params[["x_axis"]],
+      "XYsel_names" = names(params[["x_axis"]]),
+      "allColorOptions" = params[["colorPlotsBy"]],
+      "allColorOptions_names" = names(params[["colorPlotsBy"]]),
+      "splitOptions" = params[["splitPlotsBy"]],
+      "splitOptions_names" = names(params[["splitPlotsBy"]]),
+      "sampleColorList" = params[["sampleColorList"]],
+      "sampleColorList_names" = names(params[["sampleColorList"]])
     )
 
     FN <- paste0("parameters.yaml")
     yaml::write_yaml(yaml::as.yaml(yamlList), FN, fileEncoding = "UTF-8")
     setwd("..")
 
-    file.copy(system.file("ui.r", package = "biologicSC"), ".")
-    file.copy(system.file("server.r", package = "biologicSC"), ".")
+    res <- file.copy(system.file("ui.r", package = "biologicSC"), ".")
+    res <- file.copy(system.file("server.r", package = "biologicSC"), ".")
 
   }
 )
