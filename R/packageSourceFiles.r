@@ -16,18 +16,18 @@
 #' @export
 
 setGeneric(
-    name="scanObjParams",
-    def=function(
-        obj
-    ) {
+  name="scanObjParams",
+  def=function(
+    obj
+  ) {
 
-      addReductions <- function(red = "pca", obj, paramList){
+    addReductions <- function(red = "pca", obj, paramList){
       reds <- names(obj@reductions)
       pos <- grep(red, reds)
       if (length(pos) > 0){
         dfTemp <- data.frame(obj@reductions[[red]]@cell.embeddings)
         if (nrow(dfTemp) > 0){
-            paramList[[red]] <- names(dfTemp)
+          paramList[[red]] <- names(dfTemp)
 
         }
       }
@@ -42,10 +42,10 @@ setGeneric(
 
     for (i in 1:length(reds)){
       tempList <- addReductions(
-          red = reds[i],
-          obj = obj,
-          paramList = tempList
-        )
+        red = reds[i],
+        obj = obj,
+        paramList = tempList
+      )
     }
 
     allOptions <- unlist(tempList, use.names = F)
@@ -66,12 +66,12 @@ setGeneric(
 
     catOptions <- as.vector(NULL, mode = "character")
     for (i in 1:ncol(obj@meta.data)){
-        if (length(unique(obj@meta.data[,i])) <= 20){
-            catOptions <- c(
-              catOptions,
-              names(obj@meta.data)[i]
-            )
-        }
+      if (length(unique(obj@meta.data[,i])) <= 20){
+        catOptions <- c(
+          catOptions,
+          names(obj@meta.data)[i]
+        )
+      }
     }
 
     names(catOptions) <- gsub("[.]", "_", catOptions)
@@ -85,9 +85,41 @@ setGeneric(
     names(catOptions) <- gsub("None", "Black", names(catOptions))
     paramList[["colorPlotsBy"]] <- catOptions
 
+    ## Create color list ##
+    sampleColorList <- list()
+    for (i in 1:length(paramList[["colorPlotsBy"]])){
+      tag <- paramList[["colorPlotsBy"]][i]
+
+      sampleVec <- as.vector(sort(unique(obj@meta.data[,tag])))
+      sampleVec <- na.omit(sampleVec)
+      sampleVec <- sampleVec[sampleVec != ""]
+
+      if (length(sampleVec) == 1){
+        sampleColVec <- "black"
+      }  else if (length(sampleVec) == 2){
+        l1 <- length(obj@meta.data[obj@meta.data[,tag] == sampleVec[1],tag])
+        l2 <- length(obj@meta.data[obj@meta.data[,tag] == sampleVec[2],tag])
+        if (l1 > l2){
+          sampleColVec <- c("black", "red")
+        } else {
+          sampleColVec <- c("red", "black")
+        }
+
+      } else {
+        library(scales)
+        sampleColVec <- hue_pal()(length(sampleVec))
+
+      }
+
+      names(sampleColVec) <- sampleVec
+      sampleColorList[[names(paramList[["colorPlotsBy"]])[i]]] <-  sampleColVec
+    }
+    paramList[["sampleColorList"]] <- sampleColorList
+    ## Done creating color list
+
     return(paramList)
 
-    }
+  }
 
 )
 
@@ -245,7 +277,7 @@ setGeneric(
 
     ############
     ## Create database
-    projectDir <- paste0(projectName, "_app")
+    projectDir <- paste0(projectName)
     dataDir <- paste0(projectDir, "/data")
     paramDir <- paste0(projectDir, "/parameters")
 

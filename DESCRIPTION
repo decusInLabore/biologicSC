@@ -18,7 +18,8 @@ Imports:
 	Seurat (>= 3.0),
 	yaml,
 	RSQLite,
-	RMySQL
+	RMySQL,
+        scales
 Suggests: 
     knitr,
     rmarkdown

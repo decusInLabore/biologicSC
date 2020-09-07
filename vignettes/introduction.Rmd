@@ -42,7 +42,7 @@ seurat2viewer(
     #slot = "data",
     geneSel = NULL,
     params = params,
-    projectName = "test8"
+    projectName = "test8_app"
 ) 
 
 setwd("..")
