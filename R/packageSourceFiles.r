@@ -89,7 +89,11 @@ setGeneric(
     sampleColorList <- list()
     for (i in 1:length(paramList[["colorPlotsBy"]])){
       tag <- paramList[["colorPlotsBy"]][i]
+
       sampleVec <- as.vector(sort(unique(obj@meta.data[,tag])))
+      sampleVec <- na.omit(sampleVec)
+      sampleVec <- sampleVec[sampleVec != ""]
+
       if (length(sampleVec) == 1){
         sampleColVec <- "black"
       }  else if (length(sampleVec) == 2){
