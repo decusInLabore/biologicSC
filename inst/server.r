@@ -7,6 +7,10 @@
 
 ###############################################################################
 ## Load required packages                                                    ##
+library(gridExtra)
+library(ggplot2)
+library(yaml)
+
 dfkey <- read.delim("connect/db.txt", header = T, sep="\t", stringsAsFactors = F)
 
 pos <- grep("type", names(dfkey))
@@ -20,8 +24,7 @@ if (length(pos) > 0 & dfkey$type == "RSQLite"){
   DBpd <- as.character(dfkey$id2)
   mode = "SQL"
 }
-library(gridExtra)
-library(ggplot2)
+
 
 ##                                                                           ##
 ###############################################################################

@@ -10,6 +10,7 @@ dfkey <- read.delim("connect/db.txt", header = T, sep="\t", stringsAsFactors = F
 
 library(shiny)
 library(ggplot2)
+library(yaml)
 
 pos <- grep("type", names(dfkey))
 if (length(pos) > 0 & dfkey$type == "RSQLite"){
