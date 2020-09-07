@@ -4,8 +4,6 @@
 ##                                                                           ##
 ###############################################################################
 
-
-
 ###############################################################################
 ##                                                                           ##
 dfkey <- read.delim("connect/db.txt", header = T, sep="\t", stringsAsFactors = F)
@@ -68,7 +66,7 @@ dfCoordSel[["all"]] <- "all"
 ###############################################################################
 ## Get XYsel from yaml if possible                                           ##
 
-if (exists("parameters/parameters.yaml")){
+if (file.exists("parameters/parameters.yaml")){
   params <- yaml.load(
     read_yaml(
       "parameters/parameters.yaml",
