@@ -335,7 +335,8 @@ setGeneric(
     yamlList <- list(
       "XYsel" = params[["x_axis"]],
       "allColorOptions" = params[["colorPlotsBy"]],
-      "splitOptions" = params[["splitPlotsBy"]]
+      "splitOptions" = params[["splitPlotsBy"]],
+      "sampleColorList" = params[["sampleColorList"]]
     )
 
     FN <- paste0("parameters.yaml")
