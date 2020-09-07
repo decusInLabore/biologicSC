@@ -224,10 +224,6 @@ setGeneric(
 )
 
 
-dfCoord <- createDfCoord(obj)[1:3,]
-dfExpr <- createDfExpr(obj)[1:3,]
-dfColCheck <- merge(dfCoord, dfExpr, by.x = "cellID", by.y = "cellID", all =TRUE)
-
 ###############################################################################
 
 ###############################################################################
