@@ -245,7 +245,7 @@ setGeneric(
 
     ############
     ## Create database
-    projectDir <- paste0(projectName, "_app")
+    projectDir <- paste0(projectName)
     dataDir <- paste0(projectDir, "/data")
     paramDir <- paste0(projectDir, "/parameters")
 
