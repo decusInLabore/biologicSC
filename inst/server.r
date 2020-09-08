@@ -12,6 +12,15 @@ library(ggplot2)
 library(yaml)
 
 dfkey <- read.delim("connect/db.txt", header = T, sep="\t", stringsAsFactors = F)
+geneDefault = as.character(dfkey$default)
+
+host <- as.character(dfkey$url)
+user <- as.character(dfkey$id)
+DBpd <- as.character(dfkey$id2)
+dbname <- as.character(dfkey$db)
+coordinateTbName <- as.character(dfkey$coordTb)
+exprTbName <- as.character(dfkey$exprTb)
+geneID_TbName <- as.character(dfkey$geneTb)
 
 pos <- grep("type", names(dfkey))
 if (length(pos) > 0 & dfkey$type == "RSQLite"){
@@ -128,17 +137,17 @@ plot_overlay_server <- function(
 
         if (is.numeric( df$Dcolor )){
             if (minExpr < 0){
-              p <- p + scale_color_gradient2(low= lowColor, mid = "white", high= dotcolor, midpoint = 0, limits=c(minExpr,maxExpr)
+              p <- p + scale_color_gradient2(substr(colorBy, 1, 10), low= lowColor, mid = "white", high= dotcolor, midpoint = 0, limits=c(minExpr,maxExpr)
               )
             } else {
-              p <- p + scale_color_gradient(low= lowColor, high= dotcolor, limits=c(minExpr,maxExpr)
+              p <- p + scale_color_gradient(substr(colorBy, 1, 10), low= lowColor, high= dotcolor, limits=c(minExpr,maxExpr)
               )
             }
 
         } else if (colorBy == "DF_Classification" & length(unique(df$Dcolor)) == 2) {
-            p <- p + scale_colour_manual(values = c("red","black"))
+            p <- p + scale_colour_manual(substr(colorBy, 1, 10), values = c("red","black"))
         } else if (colorBy == "all") {
-            p <- p + scale_colour_manual(values = c("black"))
+            p <- p + scale_colour_manual(substr(colorBy, 1, 10), values = c("black"))
         }
 
         if (!is.numeric(df$x_axis)){
@@ -212,16 +221,7 @@ plot_overlay_server <- function(
 
 # -------------------------------------------------------------------------
 
-dfkey <- read.delim("connect/db.txt", header = T, sep="\t", stringsAsFactors = F)
-geneDefault = as.character(dfkey$default)
 
-host <- as.character(dfkey$url)
-user <- as.character(dfkey$id)
-DBpd <- as.character(dfkey$id2)
-dbname <- as.character(dfkey$db)
-coordinateTbName <- as.character(dfkey$coordTb)
-exprTbName <- as.character(dfkey$exprTb)
-geneID_TbName <- as.character(dfkey$geneTb)
 
 oldw <- getOption("warn")
 options(warn = -1)
@@ -455,6 +455,8 @@ shinyServer(
             df[["all"]] <- "all"
             as.vector(unique(df[, input$splitByColumn]))
       })
+
+
 
 
 
