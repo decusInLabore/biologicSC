@@ -343,14 +343,14 @@ setGeneric(
 
     setwd("../parameters")
     yamlList <- list(
-      "XYsel" = params[["x_axis"]],
-      "XYsel_names" = names(params[["x_axis"]]),
-      "allColorOptions" = params[["colorPlotsBy"]],
-      "allColorOptions_names" = names(params[["colorPlotsBy"]]),
-      "splitOptions" = params[["splitPlotsBy"]],
-      "splitOptions_names" = names(params[["splitPlotsBy"]]),
-      "sampleColorList" = params[["sampleColorList"]],
-      "sampleColorList_names" = names(params[["sampleColorList"]])
+      "XYsel" = unique(params[["x_axis"]]),
+      "XYsel_names" = unique(names(params[["x_axis"]])),
+      "allColorOptions" = unique(params[["colorPlotsBy"]]),
+      "allColorOptions_names" = unique(names(params[["colorPlotsBy"]])),
+      "splitOptions" = unique(params[["splitPlotsBy"]]),
+      "splitOptions_names" = unique(names(params[["splitPlotsBy"]])),
+      "sampleColorList" = unique(params[["sampleColorList"]]),
+      "sampleColorList_names" = unique(names(params[["sampleColorList"]]))
     )
 
     FN <- paste0("parameters.yaml")

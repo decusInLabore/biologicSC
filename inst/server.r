@@ -85,6 +85,7 @@ plot_overlay_server <- function(
     minX = NULL,
     maxY = NULL,
     minY = NULL,
+    pointMinMax = NULL,
     geneSel = NULL
 ) {
     library(ggplot2)
@@ -428,9 +429,9 @@ shinyServer(
 
           dfTemp[["y_axis"]] <- dfTemp[,input$y_axis]
           clusterColorColName <- "seurat_clusters"
-          levels <-
-          dfTemp[["Cluster"]] <- factor(dfTemp[,clusterColorColName], levels = sort(unique(dfTemp[,clusterColorColName])))
-          dfTemp$seurat_clusters <- as.numeric(dfTemp$seurat_clusters)
+          #levels <-
+          #dfTemp[["Cluster"]] <- factor(dfTemp[,clusterColorColName], levels = sort(unique(dfTemp[,clusterColorColName])))
+          #dfTemp$seurat_clusters <- as.numeric(dfTemp$seurat_clusters)
 
 
           if (input$colorBy == "lg10Expr"){
@@ -547,6 +548,32 @@ shinyServer(
       })
 
 
+      #########################################################################
+      ## Determine min and max value
+      determinePointMinMax <- reactive({
+        dfTemp <- createDfTemp()
+
+        if (is.numeric(dfTemp$Dcolor)){
+          minVal <- ifelse(
+            min(dfTemp$Dcolor) >= 0,
+            0,
+            min(dfTemp$Dcolor)
+          )
+
+          minMaxVec <- c(
+            minVal,
+            max(dfTemp$Dcolor, na.rm = T)
+          )
+        } else {
+          minMaxVec <- NULL
+        }
+
+        minMaxVec
+      })
+      ## Done
+      #########################################################################
+
+
 
 
 
@@ -561,6 +588,8 @@ shinyServer(
           minX = dimVec[1]
           maxY = dimVec[4]
           minY = dimVec[3]
+
+          minMaxVec <- determinePointMinMax()
 
           output$multi_plot_ui <- renderUI({
 
@@ -588,6 +617,7 @@ shinyServer(
                                 minX = minX,
                                 maxY = maxY,
                                 minY = minY,
+                                pointMinMax = minMaxVec,
                                 geneSel = input$gene
                     )
                  }
