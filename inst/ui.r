@@ -68,12 +68,30 @@ dfCoordSel[["all"]] <- "all"
 ## Get XYsel from yaml if possible                                           ##
 
 if (file.exists("parameters/parameters.yaml")){
-  params <- yaml.load(
+  Yparams <- yaml.load(
     read_yaml(
       "parameters/parameters.yaml",
       fileEncoding = "UTF-8"
+    ))
+
+    ## Check ##
+    checkVec <- c(
+      names(dfCoordSel)
     )
-  )
+
+    params <- list(
+      "XYsel" = unique(Yparams[["XYsel"]][Yparams[["XYsel"]] %in% checkVec]),
+      "allColorOptions" = unique(Yparams[["allColorOptions"]][Yparams[["allColorOptions"]] %in% checkVec]),
+      "splitOptions" = unique(Yparams[["splitOptions"]][Yparams[["splitOptions"]] %in% checkVec]),
+      "sampleColorList" = unique(Yparams[["sampleColorList"]][Yparams[["sampleColorList"]] %in% checkVec])
+    )
+
+    names(params[["XYsel"]]) <- unique(Yparams[["XYsel_names"]][Yparams[["XYsel"]] %in% checkVec])
+    names(params[["allColorOptions"]]) <- Yparams[["allColorOptions_names"]][Yparams[["allColorOptions"]] %in% checkVec]
+    names(params[["splitOptions"]]) <- Yparams[["splitOptions_names"]][Yparams[["splitOptions"]] %in% checkVec]
+    names(params[["sampleColorList"]]) <- Yparams[["sampleColorList_names"]][Yparams[["sampleColorList"]] %in% checkVec]
+
+
 } else {
   params <- list(
     "XYsel" = c(
@@ -131,6 +149,7 @@ if (file.exists("parameters/parameters.yaml")){
   )
 }
 
+print(params)
 ##                                                                           ##
 ###############################################################################
 
@@ -141,10 +160,10 @@ Xchoices <- c("Log10 Expression" = "lg10Expr",
   )
 
 
-if (length(grep("UMAP_1", Xchoices)) == 1){
-  Xsel <- Xchoices[grep("UMAP_1", Xchoices)]
+if (length(grep("^UMAP_1$", Xchoices)) == 1){
+  Xsel <- as.vector(Xchoices[grep("^UMAP_1$", Xchoices)])
 } else {
-  Xsel <- Xchoices[1]
+  Xsel <- as.vector(Xchoices[1])
 }
 
 Ychoices <- c("Log10 Expression" = "lg10Expr",
@@ -152,17 +171,17 @@ Ychoices <- c("Log10 Expression" = "lg10Expr",
 )
 
 
-if (length(grep("UMAP_2", Ychoices)) == 1){
-  Ysel <- Ychoices[grep("UMAP_2", Ychoices)]
+if (length(grep("^UMAP_2$", Ychoices)) == 1){
+  Ysel <- as.vector(Ychoices[grep("^UMAP_2$", Ychoices)])
 } else {
-  Ysel <- Ychoices[2]
+  Ysel <- as.vector(Ychoices[2])
 }
 
 splitChoices <- params[["splitOptions"]]
 if (length(grep("sampleID", splitChoices)) == 1){
-  splitSel <- splitChoices[grep("sampleID", splitChoices)]
+  splitSel <- as.vector(splitChoices[grep("sampleID", splitChoices)])
 } else {
-  splitSel <- splitChoices[1]
+  splitSel <- as.vector(splitChoices[1])
 }
 
 colorChoices <- c("Log10 Expression" = "lg10Expr",
@@ -170,20 +189,22 @@ colorChoices <- c("Log10 Expression" = "lg10Expr",
   )
 
 if (length(grep("^lg10Expr$", colorChoices)) == 1){
-  colSel <- colorChoices[grep("^lg10Expr$", colorChoices)]
+  colSel <- as.vector(colorChoices[grep("^lg10Expr$", colorChoices)])
 } else {
-  colSel <- colorChoices[1]
+  colSel <- as.vector(colorChoices[1])
 }
 
-spectralCols <- c(Darkred = "#D53E4F",
-                  Red = "#F46D43",
-                  Orange = "#FDAE61" ,
-                  Lightorange = "#FEE08B",
-                  Yellow = "#FFFFBF",
-                  Lightgreen = "#E6F598",
-                  Green = "#ABDDA4",
-                  Darkgreen = "#66C2A5",
-                  Blue =  "#3288BD")
+spectralCols <- c(
+    Darkred = "#D53E4F",
+    Red = "#F46D43",
+    Orange = "#FDAE61" ,
+    Lightorange = "#FEE08B",
+    Yellow = "#FFFFBF",
+    Lightgreen = "#E6F598",
+    Green = "#ABDDA4",
+    Darkgreen = "#66C2A5",
+    Blue =  "#3288BD"
+)
 
 conditionVec <- unique(sort(dfCoordSel$sampleID))
 
@@ -262,7 +283,7 @@ header.append('<div style=\"float:left\"><ahref=\"URL\"><img src=\"assets/images
 
             selectInput("x_axis",
                         label = "Choose an X-axis",
-                        choices =Xchoices,
+                        choices = Xchoices,
                         selected = Xsel),
             selectInput("y_axis",
                         label = "Choose an Y-axis",

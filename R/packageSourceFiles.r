@@ -55,7 +55,7 @@ setGeneric(
     clustPos <- allOptions[grep("cluster", allOptions)]
     rmPos <- c(uPos, tPos, clustPos)
     restPos <- allOptions[!(allOptions %in% rmPos)]
-    allOptions <- c(uPos, tPos, clustPos, restPos)
+    allOptions <- unique(c(uPos, tPos, clustPos, restPos))
     names(allOptions) <- gsub("[.]", "_", allOptions)
 
 
