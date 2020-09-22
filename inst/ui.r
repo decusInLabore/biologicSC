@@ -273,7 +273,7 @@ header.append('<div style=\"float:left\"><ahref=\"URL\"><img src=\"assets/images
     sidebarLayout(
         sidebarPanel(
             tags$style(".well {background-color:#42972050;}"),
-            helpText("This application puts more than 100 million data points at your fingertips. Please be patient at the beginning when the application starts."),
+            helpText("To create a Violin-stype Plot, select for example seurat_clusters as x-axis, lg10Expr as y-Axis and seurat_clusters as colorBy option."),
 
             selectizeInput("gene",
                            label = "Gene or Category Selection",
