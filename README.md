@@ -1,5 +1,6 @@
 # biologicSC
 
+```
 devtools::install_github("decusinlabore/biologicSC")
 library(biologicSC)
 library(Seurat)
@@ -29,3 +30,4 @@ seurat2viewer(
 setwd("..")
 library(shiny)
 runApp("pbmc_small_app")
+```
